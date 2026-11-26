@@ -40,7 +40,8 @@ if(isset($_POST['login_form'])) {
     </div>
     <div class="form-group my-3">
         <label for="password" class="form-label">Password:</label>
-        <input type="password" name="password" class="form-control" placeholder="Enter Your Password" value="<?= isset($_POST["password"]) ? $_POST["password"] : ""; ?>"> 
+        <!-- <input type="password" name="password" class="form-control" placeholder="Enter Your Password" value="<?= isset($_POST["password"]) ? $_POST["password"] : ""; ?>">  -->
+        <input type="password" name="password" class="form-control" placeholder="Enter Your Password">
     </div>
     <div class="form-group my-3">
         <input type="submit" class="btn btn-info" value="Login" name="login_form">
