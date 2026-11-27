@@ -13,17 +13,43 @@ if(isset($_POST['login_form'])) {
     empty(trim($password)) ? $error[] = "Password is required" : "";
     $password = md5($password);
 
-    if(!count($error)) {
-        $result = mysqli_query($connection, "SELECT * FROM users WHERE email = '$email' and password= '$password'");
-        if(mysqli_num_rows($result)>0) {
+    // if(!count($error)) {
+    //     $result = mysqli_query($connection, "SELECT * FROM users WHERE email = '$email' and password= '$password'");
+    //     if(mysqli_num_rows($result)>0) {
+    //         $user = mysqli_fetch_assoc($result);
+    //         $_SESSION["name"] = $user["name"];
+    //         $_SESSION["email"] = $user["email"];
+    //         $_SESSION["auth"] = true;
+    //         header("location: index.php");
+    //     } else {
+    //         $error[] = "login failed. Please Check your Email and Password";
+    //     }
+    // }
+    if (!count($error)) {
+        $stmt = mysqli_prepare(
+            $connection,
+            "SELECT * FROM users WHERE email = ? AND password = ?"
+        );
+
+        mysqli_stmt_bind_param($stmt, "ss", $email, $password);
+        mysqli_stmt_execute($stmt);
+
+        $result = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
+
             $_SESSION["name"] = $user["name"];
             $_SESSION["email"] = $user["email"];
             $_SESSION["auth"] = true;
+
             header("location: index.php");
+            exit;
         } else {
-            $error[] = "login failed. Please Check your Email and Password";
+            $error[] = "Login failed. Please check your email and password.";
         }
+
+        mysqli_stmt_close($stmt);
     }
 }
 ?>
